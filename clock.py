@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import time
+import json
 from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
@@ -59,6 +60,7 @@ def updateWeather():
 	global weatherOutlooks, weatherLocations, weatherUpdateTimer, weatherCityNames
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
+		print json.dumps(lookup)
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
