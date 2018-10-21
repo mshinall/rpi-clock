@@ -29,22 +29,24 @@ def clearLcdWeather():
 	mylcd.lcd_display_string("                    ", 4, 0)
 
 def rotateWeather():
-	global weatherOutlookIdx, weatherLocations
+	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
 	weatherOutlookIdx += 1
 	if weatherOutlookIdx >= len(weatherLocations):
 		weatherOutlookIdx = 0
 	clearLcdWeather()
+	weatherRotateTimer = threading.Timer(2.0, rotateWeather)
 
 def updateWeather():
-	global weatherOutlooks, weatherLocations
+	global weatherOutlooks, weatherLocations, weatherUpdateTimer
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
 	clearLcdWeather()
+	weatherUpdateTimer = threading.Timer(600.0, updateWeather)
 
-weatherUpdateTimer = threading.Timer(600.0, updateWeather)
 weatherRotateTimer = threading.Timer(2.0, rotateWeather)
+weatherUpdateTimer = threading.Timer(600.0, updateWeather)
 
 try:
 	weatherUpdateTimer.start()
