@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import time
-import threading
 from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
@@ -57,8 +56,8 @@ def updateWeather():
 		weatherOutlooks[i] = condition.text
 	clearLcdWeather()
 
-weatherRotateTimer = threading.Timer(2.0, rotateWeather)
-weatherUpdateTimer = threading.Timer(600.0, updateWeather)
+weatherRotateTimer = Timer(2.0, rotateWeather)
+weatherUpdateTimer = Timer(600.0, updateWeather)
 
 try:
 	weatherUpdateTimer.start()
