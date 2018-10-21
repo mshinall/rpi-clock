@@ -52,5 +52,5 @@ try:
 except:
 	clearLcd()
 finally:
-	weatherUpdateTimer.stop()
-	weatherRotateTimer.stop()
+	weatherUpdateTimer.cancel()
+	weatherRotateTimer.cancel()
