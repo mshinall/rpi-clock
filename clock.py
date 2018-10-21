@@ -15,12 +15,14 @@ weatherOutlookIdx = 0;
 
 
 class Timer(_Timer):
+	"""
    def run(self):
         while not self.finished.is_set():
             self.finished.wait(self.interval)
             self.function(*self.args, **self.kwargs)
 
         self.finished.set()
+	"""
 
 
 def clearLcd():
