@@ -39,7 +39,7 @@ def updateWeather():
 	clearLcd()
 
 weatherUpdateTimer = threading.Timer(600.0, updateWeather)
-weatherRotateTimer = threading.Timer(60.0, rotateWeather)
+weatherRotateTimer = threading.Timer(5.0, rotateWeather)
 
 try:
 	weatherUpdateTimer.start()
