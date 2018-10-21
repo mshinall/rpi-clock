@@ -23,6 +23,8 @@ def updateLcd():
 	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx], 3, 0)
 	mylcd.lcd_display_string(weatherOutlooks[weatherOutlookIdx], 4, 0)
 
+	mylcd.lcd_display_string(str(weatherOutlookIdx), 3, 19)
+
 def clearLcdWeather():
 	global mylcd
 	mylcd.lcd_display_string("                    ", 3, 0)
