@@ -61,7 +61,7 @@ def updateWeather():
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
-		print(weatherLocations[i] + " " + weatherOutlooks[i])
+		print weatherLocations[i] + " " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
 weatherRotateTimer = Timer(5.0, rotateWeather)
