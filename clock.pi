@@ -10,17 +10,15 @@ def clearLcd():
 	mylcd.lcd_clear()
 
 def updateLcd():
-	clearLcd()
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 0, 1)
 	mylcd.lcd_display_string(time.strftime("%H:%M:%S", time.localtime()), 0, 1)
 
 try:
 	updateLcd()
-
 	while(True):
-		#print("keypad: sleeping...")
+		clearLcd()
 		updateLcd()
 		time.sleep(1)
+
 except:
-	#print("keypad: cleaning up")
 	clearLcd()
