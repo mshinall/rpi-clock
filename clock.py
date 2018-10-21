@@ -12,6 +12,9 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
+weatherUpdateTimer = ""
+weatherRotateTimer = ""
+
 
 def clearLcd():
 	global mylcd
@@ -21,7 +24,8 @@ def updateLcd():
 	global mylcd
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("%H:%M:%S", time.localtime()), 2, 0)
-	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx] + " " + weatherOutlooks[weatherOutlookIdx], 3, 0)
+	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx], 3, 0)
+	mylcd.lcd_display_string(weatherOutlooks[weatherOutlookIdx], 4, 0)
 
 def rotateWeather():
 	global weatherOutlookIdx
@@ -39,10 +43,13 @@ def updateWeather():
 try:
 	updateWeather()
 	updateLcd()
-	threading.Timer(600.0, updateWeather).start()
-	threading.Timer(60.0, rotateWeather).start()
+	weatherUpdateTimer = threading.Timer(600.0, updateWeather).start()
+	weatherRotateTimer = threading.Timer(60.0, rotateWeather).start()
 	while True:
 		updateLcd()
 		time.sleep(1)
 except:
 	clearLcd()
+finally:
+	weatherUpdateTimer.stop()
+	weatherRotateTimer.stop()
