@@ -64,7 +64,7 @@ def updateWeather():
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
-		weatherOutlooks[i] = condition.temp + degrees + "F " + condition.text
+		weatherOutlooks[i] = condition.temp + "F " + condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
