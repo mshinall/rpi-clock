@@ -63,7 +63,7 @@ def updateWeather():
 		weatherOutlooks[i] = condition.text
 	updateWeatherBuffer()
 
-weatherRotateTimer = Timer(10.0, rotateWeather)
+weatherRotateTimer = Timer(5.0, rotateWeather)
 weatherUpdateTimer = Timer(600.0, updateWeather)
 
 try:
