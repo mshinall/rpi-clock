@@ -17,15 +17,12 @@ newLcdBuffer = ["", "", "", ""]
 
 
 class Timer(_Timer):
-	"""
    def run(self):
         while not self.finished.is_set():
             self.finished.wait(self.interval)
             self.function(*self.args, **self.kwargs)
 
         self.finished.set()
-	"""
-
 
 def clearLcd():
 	global mylcd
@@ -41,8 +38,9 @@ def updateLcd():
 
 def updateTimeBuffer():
 	global newLcdBuffer, oldLcdBuffer
-	newLcdBuffer[1] = time.strftime("  %a, %d %b %Y", time.localtime())
-	newLcdBuffer[2] = time.strftime("      %H:%M:%S", time.localtime())
+	now = time.localtime()
+	newLcdBuffer[1] = time.strftime("  %a, %d %b %Y", now)
+	newLcdBuffer[2] = time.strftime("      %H:%M:%S", now)
 
 def updateWeatherBuffer():
 	global newLcdBuffer, oldLcdBuffer
