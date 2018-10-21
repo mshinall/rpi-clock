@@ -7,7 +7,7 @@ from weather import Weather, Unit
 import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
-weather = Weather(unit=Unit.CELSIUS)
+weather = Weather(unit=Unit.FAHRENHEIT)
 weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
@@ -62,7 +62,7 @@ def updateWeather():
 		lookup = weather.lookup(weatherLocations[i])
 		print json.dumps(lookup)
 		condition = lookup.condition
-		weatherOutlooks[i] = condition.text
+		weatherOutlooks[i] = condition.temp + "°F " + condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
