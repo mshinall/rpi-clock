@@ -8,10 +8,10 @@ mylcd = I2C_LCD_driver.lcd()
 def clearLcd():
 	global mylcd
 	mylcd.lcd_clear()
-	
+
 def updateLcd():
 	clearLcd()
-	mylcd.lcd_display_string("Hello World!", 1, 1)
+	mylcd.lcd_display_string(time.gmtime(), 1, 1)
 
 
 try:
