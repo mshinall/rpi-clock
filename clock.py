@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 
 import time
 import json
@@ -62,7 +62,7 @@ def updateWeather():
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
-		weatherOutlooks[i] = condition.temp + "°F " + condition.text
+		weatherOutlooks[i] = condition.temp + u'\N{DEGREE SIGN}' + "F " + condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
