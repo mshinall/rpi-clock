@@ -2,6 +2,7 @@
 
 import time
 import threading
+from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
 
@@ -11,6 +12,17 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
+
+
+
+class Timer(_Timer):
+   def run(self):
+        while not self.finished.is_set():
+            self.finished.wait(self.interval)
+            self.function(*self.args, **self.kwargs)
+
+        self.finished.set()
+
 
 def clearLcd():
 	global mylcd
@@ -31,25 +43,19 @@ def clearLcdWeather():
 	mylcd.lcd_display_string("                    ", 4, 0)
 
 def rotateWeather():
-	weatherRotateTimer.cancel()
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
 	weatherOutlookIdx += 1
-	#if weatherOutlookIdx >= len(weatherLocations):
-	#	weatherOutlookIdx = 0
+	if weatherOutlookIdx >= len(weatherLocations):
+		weatherOutlookIdx = 0
 	clearLcdWeather()
-	#weatherRotateTimer = threading.Timer(2.0, rotateWeather)
-	weatherRotateTimer.start()
 
 def updateWeather():
-	weatherUpdateTimer.cancel()
 	global weatherOutlooks, weatherLocations, weatherUpdateTimer
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
 	clearLcdWeather()
-	#weatherUpdateTimer = threading.Timer(600.0, updateWeather)
-	weatherUpdateTimer.start()
 
 weatherRotateTimer = threading.Timer(2.0, rotateWeather)
 weatherUpdateTimer = threading.Timer(600.0, updateWeather)
