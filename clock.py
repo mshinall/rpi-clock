@@ -11,8 +11,6 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
-weatherUpdateTimer = threading.Timer(600.0, updateWeather)
-weatherRotateTimer = threading.Timer(60.0, rotateWeather)
 
 def clearLcd():
 	global mylcd
@@ -41,6 +39,8 @@ def updateWeather():
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
 
+weatherUpdateTimer = threading.Timer(600.0, updateWeather)
+weatherRotateTimer = threading.Timer(60.0, rotateWeather)
 
 try:
 	weatherUpdateTimer.start()
