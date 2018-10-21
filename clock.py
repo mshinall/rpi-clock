@@ -44,7 +44,7 @@ def updateTimeBuffer():
 	newLcdBuffer[1] = time.strftime("      %H:%M:%S", now)
 
 def updateWeatherBuffer():
-	global newLcdBuffer, oldLcdBuffer
+	global newLcdBuffer, oldLcdBuffer, weatherCityNames, weatherOutlooks, weatherOutlookIdx
 	newLcdBuffer[2] = weatherCityNames[weatherOutlookIdx]
 	newLcdBuffer[3] = weatherOutlooks[weatherOutlookIdx]
 
