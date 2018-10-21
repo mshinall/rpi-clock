@@ -45,9 +45,7 @@ weatherRotateTimer = threading.Timer(60.0, rotateWeather)
 try:
 	weatherUpdateTimer.start()
 	weatherRotateTimer.start()
-	#updateWeather()
-	updateLcd()
-
+	updateWeather()
 	while True:
 		updateLcd()
 		time.sleep(1)
