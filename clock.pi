@@ -11,7 +11,7 @@ def clearLcd():
 
 def updateLcd():
 	clearLcd()
-	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime()), 1, 1)
+	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime()), 1, 1)
 
 
 try:
