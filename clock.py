@@ -22,10 +22,12 @@ def clearLcd():
 
 def updateLcd():
 	global mylcd
-	clearLcd()
+	#clearLcd()
 	mylcd.lcd_display_string(time.strftime("  %a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("      %H:%M:%S", time.localtime()), 2, 0)
+	mylcd.lcd_display_string("                    ", 3, 0)
 	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx], 3, 0)
+	mylcd.lcd_display_string("                    ", 4, 0)
 	mylcd.lcd_display_string(weatherOutlooks[weatherOutlookIdx], 4, 0)
 
 def rotateWeather():
