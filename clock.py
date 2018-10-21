@@ -10,7 +10,7 @@ import I2C_LCD_driver
 mylcd = I2C_LCD_driver.lcd()
 weather = Weather(unit=Unit.FAHRENHEIT)
 weatherLocations = [28350089, 2499644]
-weatherCityNames = ["Martinsburg", "Sterling"]
+weatherCityNames = ["Martinsburg WV", "Sterling VA"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
 #degrees = u'\N{DEGREE SIGN}'
