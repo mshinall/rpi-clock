@@ -5,16 +5,14 @@ import threading
 from weather import Weather, Unit
 import I2C_LCD_driver
 
-
 mylcd = I2C_LCD_driver.lcd()
 weather = Weather(unit=Unit.CELSIUS)
 weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
-weatherUpdateTimer = {}
-weatherRotateTimer = {}
-
+weatherUpdateTimer = threading.Timer(600.0, updateWeather)
+weatherRotateTimer = threading.Timer(60.0, rotateWeather)
 
 def clearLcd():
 	global mylcd
@@ -43,11 +41,13 @@ def updateWeather():
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
 
+
 try:
-	updateWeather()
+	weatherUpdateTimer.start()
+	weatherRotateTimer.start()
+	#updateWeather()
 	updateLcd()
-	weatherUpdateTimer = threading.Timer(600.0, updateWeather).start()
-	weatherRotateTimer = threading.Timer(60.0, rotateWeather).start()
+
 	while True:
 		updateLcd()
 		time.sleep(1)
