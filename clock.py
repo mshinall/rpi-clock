@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
 import time
-import weather
+from weather import Weather, Unit
 import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
-weather = weather.Weather(unit=weather.Unit.CELSIUS)
+weather = Weather(unit=Unit.CELSIUS)
 w = 0;
-condition = "";
+outlook = "";
 
 def clearLcd():
 	global mylcd
@@ -24,14 +24,13 @@ def updateLcd():
 	"""
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("%H:%M:%S", time.localtime()), 2, 0)
-	mylcd.lcd_display_string(condition.text, 3, 0)
+	mylcd.lcd_display_string(outlook, 3, 0)
 
 def updateWeather():
-	global condition
+	global outlook
 	lookup = weather.lookup(560743)
 	condition = lookup.condition
-
-print(condition.text)
+	outlook = condition.text
 
 try:
 	updateWeather()
