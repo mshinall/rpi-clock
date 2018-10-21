@@ -36,7 +36,7 @@ def rotateWeather():
 	if weatherOutlookIdx >= len(weatherLocations):
 		weatherOutlookIdx = 0
 	clearLcdWeather()
-	#weatherRotateTimer = threading.Timer(2.0, rotateWeather)
+	weatherRotateTimer = threading.Timer(2.0, rotateWeather)
 
 def updateWeather():
 	global weatherOutlooks, weatherLocations, weatherUpdateTimer
