@@ -23,7 +23,6 @@ try:
 	updateLcd()
 	while(True):
 		time.sleep(0.2)
-		updateLcd()
 
 except:
 	clearLcd()
