@@ -13,6 +13,7 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
+degrees = u'\N{DEGREE SIGN}'
 
 oldLcdBuffer = ["", "", "", ""]
 newLcdBuffer = ["", "", "", ""]
@@ -62,7 +63,7 @@ def updateWeather():
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
-		weatherOutlooks[i] = condition.temp + u'\N{DEGREE SIGN}' + "F " + condition.text
+		weatherOutlooks[i] = condition.temp + degrees + "F " + condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
