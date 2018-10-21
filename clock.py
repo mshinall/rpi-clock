@@ -29,14 +29,14 @@ def clearLcdWeather():
 	mylcd.lcd_display_string("                    ", 4, 0)
 
 def rotateWeather():
-	global weatherOutlookIdx
+	global weatherOutlookIdx, weatherLocations
 	weatherOutlookIdx += 1
 	if weatherOutlookIdx >= len(weatherLocations):
 		weatherOutlookIdx = 0
 	clearLcdWeather()
 
 def updateWeather():
-	global outlooks
+	global weatherOutlooks, weatherLocations
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
