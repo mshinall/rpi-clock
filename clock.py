@@ -18,12 +18,9 @@ def clearLcd():
 
 def updateLcd():
 	global mylcd
-	#clearLcd()
 	mylcd.lcd_display_string(time.strftime("  %a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("      %H:%M:%S", time.localtime()), 2, 0)
-	mylcd.lcd_display_string("                    ", 3, 0)
 	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx], 3, 0)
-	mylcd.lcd_display_string("                    ", 4, 0)
 	mylcd.lcd_display_string(weatherOutlooks[weatherOutlookIdx], 4, 0)
 
 def rotateWeather():
@@ -31,6 +28,7 @@ def rotateWeather():
 	weatherOutlookIdx += 1
 	if weatherOutlookIdx >= len(weatherLocations):
 		weatherOutlookIdx = 0
+	clearLcd()
 
 def updateWeather():
 	global outlooks
@@ -38,6 +36,7 @@ def updateWeather():
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
+	clearLcd()
 
 weatherUpdateTimer = threading.Timer(600.0, updateWeather)
 weatherRotateTimer = threading.Timer(60.0, rotateWeather)
