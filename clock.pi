@@ -5,6 +5,7 @@ import time
 
 mylcd = I2C_LCD_driver.lcd()
 ticker = ["|", "/", "-", "\\"]
+t = 0
 
 def clearLcd():
 	global mylcd
@@ -12,13 +13,14 @@ def clearLcd():
 
 def updateLcd():
 	global mylcd, ticker
-	ticker += 1
-	if ticker >= length(ticker):
-		tickr = 0;
+	t += 1
+	if t >= length(ticker):
+		t = 0;
 
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("%H:%M:%S", time.localtime()), 2, 0)
 	mylcd.lcd_display_string(ticker[i], 4, 19)
+
 try:
 	updateLcd()
 	while(True):
