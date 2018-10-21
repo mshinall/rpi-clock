@@ -56,12 +56,12 @@ def rotateWeather():
 	updateWeatherBuffer()
 
 def updateWeather():
-	global weatherOutlooks, weatherLocations, weatherUpdateTimer
+	global weatherOutlooks, weatherLocations, weatherUpdateTimer, weatherCityNames
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
-		print str(weatherLocations[i]) + " " + weatherOutlooks[i]
+		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 	updateWeatherBuffer()
 
 weatherRotateTimer = Timer(5.0, rotateWeather)
