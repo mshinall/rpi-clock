@@ -4,7 +4,7 @@ import time
 import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
-ticker = ["|", "/", "-", "\\"]
+ticker = ["|", "/", "-", "\\\\"]
 t = 0
 
 def clearLcd():
