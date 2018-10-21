@@ -11,7 +11,7 @@ wlocs = [28350089, 2499644]
 wnames = ["Martinsburg", "Sterling"]
 w = 0
 wl = 0
-outlooks = ["",""]
+outlooks = ["", ""]
 
 def clearLcd():
 	global mylcd
@@ -24,7 +24,7 @@ def updateLcd():
 	if w >= 599:
 		updateWeather()
 		w = 0
-		if(wl >= len(wlocs)):
+		if wl >= len(wlocs):
 			wl = 0
 
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 1, 0)
@@ -36,7 +36,7 @@ def updateWeather():
 	for i in range(0, len(wlocs)):
 		lookup = weather.lookup(wlocs[i])
 		condition = lookup.condition
-		outlook = condition.text
+		outlooks[i] = condition.text
 
 try:
 	updateWeather()
