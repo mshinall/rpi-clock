@@ -13,7 +13,8 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
-degrees = u'\N{DEGREE SIGN}'
+#degrees = u'\N{DEGREE SIGN}'
+degrees = '*'
 
 oldLcdBuffer = ["", "", "", ""]
 newLcdBuffer = ["", "", "", ""]
