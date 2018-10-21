@@ -12,6 +12,8 @@ weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
 
+oldLcdBuffer = ["", "", "", ""]
+newLcdBuffer = ["", "", "", ""]
 
 
 class Timer(_Timer):
@@ -30,25 +32,29 @@ def clearLcd():
 	mylcd.lcd_clear()
 
 def updateLcd():
-	global mylcd
-	mylcd.lcd_display_string(time.strftime("  %a, %d %b %Y", time.localtime()), 1, 0)
-	mylcd.lcd_display_string(time.strftime("      %H:%M:%S", time.localtime()), 2, 0)
-	mylcd.lcd_display_string(weatherCityNames[weatherOutlookIdx], 3, 0)
-	mylcd.lcd_display_string(weatherOutlooks[weatherOutlookIdx], 4, 0)
+	global mylcd, newLcdBuffer, oldLcdBuffer
+	for i in range(0, 3):
+		mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i, 0)
+		mylcd.lcd_display_string(newLcdBuffer[i], i, 0)
+		oldLcdBuffer[i] = newLcdBuffer[i]
+		newLcdBuffer[i] = ""
 
-	mylcd.lcd_display_string(str(weatherOutlookIdx), 3, 19)
+def updateTimeBuffer():
+	global newLcdBuffer, oldLcdBuffer
+	newLcdBuffer[1] = time.strftime("  %a, %d %b %Y", time.localtime())
+	newLcdBuffer[2] = time.strftime("      %H:%M:%S", time.localtime())
 
-def clearLcdWeather():
-	global mylcd
-	mylcd.lcd_display_string("                    ", 3, 0)
-	mylcd.lcd_display_string("                    ", 4, 0)
+def updateWeatherBuffer():
+	global newLcdBuffer, oldLcdBuffer
+	newLcdBuffer[3] = weatherCityNames[weatherOutlookIdx]
+	newLcdBuffer[4] = weatherOutlooks[weatherOutlookIdx]
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
 	weatherOutlookIdx += 1
 	if weatherOutlookIdx >= len(weatherLocations):
 		weatherOutlookIdx = 0
-	clearLcdWeather()
+	updateWeatherBuffer()
 
 def updateWeather():
 	global weatherOutlooks, weatherLocations, weatherUpdateTimer
@@ -56,7 +62,7 @@ def updateWeather():
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.text
-	clearLcdWeather()
+	updateWeatherBuffer()
 
 weatherRotateTimer = Timer(2.0, rotateWeather)
 weatherUpdateTimer = Timer(600.0, updateWeather)
@@ -66,6 +72,7 @@ try:
 	weatherRotateTimer.start()
 	updateWeather()
 	while True:
+		updateTimeBuffer()
 		updateLcd()
 		time.sleep(1)
 except:
