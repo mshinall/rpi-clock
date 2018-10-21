@@ -12,8 +12,8 @@ weatherLocations = [28350089, 2499644]
 weatherCityNames = ["Martinsburg", "Sterling"]
 weatherOutlooks = ["", ""]
 weatherOutlookIdx = 0;
-weatherUpdateTimer = ""
-weatherRotateTimer = ""
+weatherUpdateTimer = {}
+weatherRotateTimer = {}
 
 
 def clearLcd():
