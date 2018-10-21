@@ -1,29 +1,40 @@
 #!/usr/bin/python
 
 import time
+import weather
 import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
-ticker = ["|", "/", "-", "\\"]
-t = 0
+weather = weather.Weather(unit=weather.Unit.CELSIUS)
+w = 0;
+condition = "";
 
 def clearLcd():
 	global mylcd
 	mylcd.lcd_clear()
 
 def updateLcd():
-	global mylcd, ticker, t
-	t += 1
-	if t >= len(ticker):
-		t = 0
+	global mylcd, ticker, w
+	w += 1
+	if w >= 599:
+		updateWeather()
+		w = 0
 	"""
 	mylcd.lcd_display_string("Hello", 1, 1)
 	"""
 	mylcd.lcd_display_string(time.strftime("%a, %d %b %Y", time.localtime()), 1, 0)
 	mylcd.lcd_display_string(time.strftime("%H:%M:%S", time.localtime()), 2, 0)
-	mylcd.lcd_display_string(ticker[t], 4, 19)
+	mylcd.lcd_display_string(condition.text, 3, 0)
+
+def updateWeather():
+	global condition
+	lookup = weather.lookup(560743)
+	condition = lookup.condition
+
+print(condition.text)
 
 try:
+	updateWeather()
 	updateLcd()
 	while True:
 		updateLcd()
