@@ -60,7 +60,6 @@ def updateWeather():
 	global weatherOutlooks, weatherLocations, weatherUpdateTimer, weatherCityNames
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
-		print json.dumps(lookup)
 		condition = lookup.condition
 		weatherOutlooks[i] = condition.temp + "°F " + condition.text
 		print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
