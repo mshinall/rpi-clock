@@ -33,8 +33,8 @@ def updateLcd():
 
 def updateWeather():
 	global outlooks
-	for i in range(0, len (wlocs)):
-		lookup = weather.lookup(wlocs[wl])
+	for i in range(0, len(wlocs)):
+		lookup = weather.lookup(wlocs[i])
 		condition = lookup.condition
 		outlook = condition.text
 
