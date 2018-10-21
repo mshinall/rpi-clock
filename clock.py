@@ -30,14 +30,10 @@ def clearLcd():
 
 def updateLcd():
 	global mylcd, newLcdBuffer, oldLcdBuffer
-	for i in range(0, 2):
+	for i in range(0, 4):
 		if oldLcdBuffer[i] != newLcdBuffer[i]:
-			mylcd.lcd_display_string(newLcdBuffer[i], i+1, 0)
-			oldLcdBuffer[i] = newLcdBuffer[i]
-
-	for i in range(2, 4):
-		if oldLcdBuffer[i] != newLcdBuffer[i]:
-			mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i+1, 0)
+			if i > 1:
+				mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i+1, 0)
 			mylcd.lcd_display_string(newLcdBuffer[i], i+1, 0)
 			oldLcdBuffer[i] = newLcdBuffer[i]
 
