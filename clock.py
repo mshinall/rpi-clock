@@ -24,12 +24,12 @@ def updateLcd():
 	#mylcd.lcd_display_string(ticker[i], 4, 19)
 	"""
 
-"""
 try:
 	updateLcd()
 	while True:
 		time.sleep(0.2)
-
 except:
 	clearLcd()
-"""
+
+
+	
