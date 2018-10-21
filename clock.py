@@ -31,21 +31,21 @@ def clearLcd():
 def updateLcd():
 	global mylcd, newLcdBuffer, oldLcdBuffer
 	for i in range(0, 3):
-		mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i, 0)
-		mylcd.lcd_display_string(newLcdBuffer[i], i, 0)
+		mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i+1, 0)
+		mylcd.lcd_display_string(newLcdBuffer[i], i+1, 0)
 		oldLcdBuffer[i] = newLcdBuffer[i]
 		newLcdBuffer[i] = ""
 
 def updateTimeBuffer():
 	global newLcdBuffer, oldLcdBuffer
 	now = time.localtime()
-	newLcdBuffer[1] = time.strftime("  %a, %d %b %Y", now)
-	newLcdBuffer[2] = time.strftime("      %H:%M:%S", now)
+	newLcdBuffer[0] = time.strftime("  %a, %d %b %Y", now)
+	newLcdBuffer[1] = time.strftime("      %H:%M:%S", now)
 
 def updateWeatherBuffer():
 	global newLcdBuffer, oldLcdBuffer
-	newLcdBuffer[3] = weatherCityNames[weatherOutlookIdx]
-	newLcdBuffer[4] = weatherOutlooks[weatherOutlookIdx]
+	newLcdBuffer[2] = weatherCityNames[weatherOutlookIdx]
+	newLcdBuffer[3] = weatherOutlooks[weatherOutlookIdx]
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
