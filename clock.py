@@ -27,6 +27,6 @@ try:
 	updateLcd()
 	while True:
 		updateLcd()
-		time.sleep(0.2)
+		time.sleep(1)
 except:
 	clearLcd()
