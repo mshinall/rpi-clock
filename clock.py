@@ -12,9 +12,9 @@ def clearLcd():
 	mylcd.lcd_clear()
 
 def updateLcd():
-	global mylcd, ticker
+	global mylcd, ticker, t
 	t += 1
-	if t >= length(ticker):
+	if t >= len(ticker):
 		t = 0
 
 	mylcd.lcd_display_string("Hello", 1, 1)
@@ -30,6 +30,3 @@ try:
 		time.sleep(0.2)
 except:
 	clearLcd()
-
-
-	
