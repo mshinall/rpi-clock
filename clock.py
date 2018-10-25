@@ -16,8 +16,8 @@ weatherOutlookIdx = 0;
 #degrees = u'\N{DEGREE SIGN}'
 degrees = '*'
 
-oldLcdBuffer = ["", "", "", ""]
-newLcdBuffer = ["", "", "", ""]
+oldLcdBuffer = [[]]
+newLcdBuffer = [[]]
 
 
 class Timer(_Timer):
@@ -58,13 +58,17 @@ def updateLcd():
 def updateTimeBuffer():
 	global newLcdBuffer, oldLcdBuffer
 	now = time.localtime()
-	newLcdBuffer[0] = time.strftime("  %a, %d %b %Y", now)
-	newLcdBuffer[1] = time.strftime("    %I:%M:%S %p", now)
+	lcdBuffer(0, time.strftime("  %a, %d %b %Y", now))
+	lcdBuffer(1, time.strftime("    %I:%M:%S %p", now))
 
 def updateWeatherBuffer():
 	global newLcdBuffer, oldLcdBuffer, weatherCityNames, weatherOutlooks, weatherOutlookIdx
-	newLcdBuffer[2] = weatherCityNames[weatherOutlookIdx]
-	newLcdBuffer[3] = weatherOutlooks[weatherOutlookIdx]
+	lcdBuffer(2, weatherCityNames[weatherOutlookIdx])
+	lcdBuffer(3, weatherOutlooks[weatherOutlookIdx])
+
+def lcdBuffer(y, string):
+	global newLcdBuffer
+	newLcdBuffer[y] = string.split('')
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
