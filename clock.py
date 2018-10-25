@@ -68,7 +68,7 @@ def updateWeatherBuffer():
 
 def lcdBuffer(y, string):
 	global newLcdBuffer
-	newLcdBuffer[y] = [list(string)]
+	newLcdBuffer[y] = [list(string.ljust(20))]
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
