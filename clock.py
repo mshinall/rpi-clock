@@ -69,7 +69,7 @@ def updateWeather():
 	updateWeatherBuffer()
 
 weatherRotateTimer = Timer(5.0, rotateWeather)
-weatherUpdateTimer = Timer(600.0, updateWeather)
+weatherUpdateTimer = Timer(1800.0, updateWeather)
 
 try:
 	weatherUpdateTimer.start()
