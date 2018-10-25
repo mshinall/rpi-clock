@@ -16,8 +16,8 @@ weatherOutlookIdx = 0;
 #degrees = u'\N{DEGREE SIGN}'
 degrees = '*'
 
-oldLcdBuffer = [[]]
-newLcdBuffer = [[]]
+oldLcdBuffer = []
+newLcdBuffer = []
 
 
 class Timer(_Timer):
@@ -68,7 +68,7 @@ def updateWeatherBuffer():
 
 def lcdBuffer(y, string):
 	global newLcdBuffer
-	newLcdBuffer[y] = list(string)
+	newLcdBuffer[y] = [list(string)]
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
