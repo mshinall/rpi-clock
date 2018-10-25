@@ -19,6 +19,12 @@ degrees = '*'
 oldLcdBuffer = []
 newLcdBuffer = []
 
+for y in range(0, 4):
+	oldLcdBuffer[y] = []
+	newLcdBuffer[y] = []
+	for x in range(0, 20):
+		oldLcdBuffer[y][x] = " "
+		newLcdBuffer[y][x] = " "
 
 class Timer(_Timer):
    def run(self):
