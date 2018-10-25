@@ -20,11 +20,9 @@ oldLcdBuffer = []
 newLcdBuffer = []
 
 for y in range(0, 4):
-	oldLcdBuffer.append([])
-	newLcdBuffer.append([])
-	for x in range(0, 20):
-		oldLcdBuffer[y].append(" ")
-		newLcdBuffer[y].append(" ")
+
+	oldLcdBuffer.append([[" " for x in range(0, 20)] for y in range(0,4)])
+	newLcdBuffer.append([[" " for x in range(0, 20)] for y in range(0,4)])
 
 class Timer(_Timer):
    def run(self):
@@ -54,21 +52,16 @@ def updateLcd():
 	for y in range(0, 4):
 		for x in range(0, 20):
 			if oldLcdBuffer[y][x] != newLcdBuffer[y][x]:
-				"""
-				if y > 1:
-					mylcd.lcd_display_string(' ' * len(oldLcdBuffer[i]), i+1, 0)
-				"""
 				mylcd.lcd_display_string(newLcdBuffer[y][x], y+1, x)
 				oldLcdBuffer[y][x] = newLcdBuffer[y][x]
 
 def updateTimeBuffer():
-	global newLcdBuffer, oldLcdBuffer
 	now = time.localtime()
 	lcdBuffer(0, time.strftime("  %a, %d %b %Y", now))
 	lcdBuffer(1, time.strftime("    %I:%M:%S %p", now))
 
 def updateWeatherBuffer():
-	global newLcdBuffer, oldLcdBuffer, weatherCityNames, weatherOutlooks, weatherOutlookIdx
+	global weatherCityNames, weatherOutlooks, weatherOutlookIdx
 	lcdBuffer(2, weatherCityNames[weatherOutlookIdx])
 	lcdBuffer(3, weatherOutlooks[weatherOutlookIdx])
 
