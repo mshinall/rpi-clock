@@ -16,13 +16,8 @@ weatherOutlookIdx = 0;
 #degrees = u'\N{DEGREE SIGN}'
 degrees = '*'
 
-oldLcdBuffer = []
-newLcdBuffer = []
-
-for y in range(0, 4):
-
-	oldLcdBuffer.append([[" " for x in range(0, 20)] for y in range(0,4)])
-	newLcdBuffer.append([[" " for x in range(0, 20)] for y in range(0,4)])
+oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
+newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 
 class Timer(_Timer):
    def run(self):
