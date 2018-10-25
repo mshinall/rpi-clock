@@ -20,11 +20,11 @@ oldLcdBuffer = []
 newLcdBuffer = []
 
 for y in range(0, 4):
-	oldLcdBuffer[y] = []
-	newLcdBuffer[y] = []
+	oldLcdBuffer.append([])
+	newLcdBuffer.append([])
 	for x in range(0, 20):
-		oldLcdBuffer[y][x] = " "
-		newLcdBuffer[y][x] = " "
+		oldLcdBuffer[y].append(" ")
+		newLcdBuffer[y].append(" ")
 
 class Timer(_Timer):
    def run(self):
