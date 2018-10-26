@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import sys
 import time
 import json
 from threading import _Timer
@@ -15,9 +16,13 @@ weatherOutlooks = ["", "", "", ""]
 weatherOutlookIdx = 0;
 #degrees = u'\N{DEGREE SIGN}'
 degrees = '*'
+args = sys.argv[1:]
+argIdx = 0
 
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
+
+print(json.dumps(sys.argv))
 
 class Timer(_Timer):
    def run(self):
@@ -62,8 +67,7 @@ def updateLcd():
 
 def updateTimeBuffer():
 	now = time.localtime()
-	lcdBuffer(0, time.strftime("  %a, %d %b %Y", now))
-	lcdBuffer(1, time.strftime("    %I:%M:%S %p", now))
+	lcdBuffer(1, time.strftime("%m/%d/%Y  %I:%M %p", now))
 
 def updateWeatherBuffer():
 	global weatherCityNames, weatherOutlooks, weatherOutlookIdx
@@ -73,6 +77,17 @@ def updateWeatherBuffer():
 def lcdBuffer(y, string):
 	global newLcdBuffer
 	newLcdBuffer[y] = list(string.ljust(20)[0:20])
+
+def updateArgBuffer():
+	global argIdx, args
+	lcdBuffer(0, args[argIdx])	
+
+def rotateArg():
+	global argIdx, args
+	argIdx += 1
+	if argIdx >= len(args):
+		argIdx = 0
+	updateArgBuffer()
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
@@ -92,11 +107,14 @@ def updateWeather():
 
 weatherRotateTimer = Timer(5.0, rotateWeather)
 weatherUpdateTimer = Timer(1800.0, updateWeather)
+argUpdateTimer = Timer(2.0, rotateArg)
 
 try:
 	weatherUpdateTimer.start()
 	weatherRotateTimer.start()
+	argUpdateTimer.start()
 	updateWeather()
+	updateArgBuffer()
 	while True:
 		updateTimeBuffer()
 		updateLcd()
@@ -106,3 +124,8 @@ except:
 finally:
 	weatherUpdateTimer.cancel()
 	weatherRotateTimer.cancel()
+	argUpdateTimer.cancel()
+
+
+
+
