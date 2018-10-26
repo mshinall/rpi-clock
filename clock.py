@@ -27,12 +27,21 @@ class Timer(_Timer):
 
         self.finished.set()
 
+def printBuffers():
+	global newLcdBuffer, oldLcdBuffer
+	for i in range(0, 4):
+		print(str(i) + " " + json.dumps(oldLcdBuffer[i]) + ">" + json.dumps(newLcdBuffer[i]))
+	print("")
+
+#printBuffers() 
+
 def clearLcd():
 	global mylcd
 	mylcd.lcd_clear()
 
 """
 def updateLcd():
+	printBuffers()
 	global mylcd, newLcdBuffer, oldLcdBuffer
 	for i in range(0, 4):
 		if oldLcdBuffer[i] != newLcdBuffer[i]:
@@ -44,6 +53,7 @@ def updateLcd():
 
 def updateLcd():
 	global mylcd, newLcdBuffer, oldLcdBuffer
+	#printBuffers()
 	for y in range(0, 4):
 		for x in range(0, 20):
 			if oldLcdBuffer[y][x] != newLcdBuffer[y][x]:
@@ -62,7 +72,7 @@ def updateWeatherBuffer():
 
 def lcdBuffer(y, string):
 	global newLcdBuffer
-	newLcdBuffer[y] = [list(string.ljust(20))]
+	newLcdBuffer[y] = list(string.ljust(20)[0:20])
 
 def rotateWeather():
 	global weatherOutlookIdx, weatherLocations, weatherRotateTimer
