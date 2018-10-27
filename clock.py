@@ -25,7 +25,7 @@ baro = ["steady", "rising", "falling"]
 lcdRefreshInt = 1.0
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
-
+stopNow = False
 #print(json.dumps(sys.argv))
 
 class Timer(_Timer):
@@ -65,7 +65,7 @@ def updateLcd():
 
 def updateTimeBuffer():
 	now = time.localtime()
-	lcdBuffer(1, time.strftime("%m/%d/%Y  %I:%M %p", now))
+	lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))
 
 def updateWeatherBuffer():
 	global weatherCityNames, weatherOutlooks, weatherOutlookIdx, weatherLocationIdx
@@ -116,6 +116,8 @@ def updateWeather():
 	updateWeatherBuffer()
 
 def stop():
+	global stopNow
+	stopNow = True
 	sys.exit(0)	
 
 weatherRotateTimer = Timer(2.0, rotateWeather)
@@ -138,6 +140,8 @@ try:
 	signal.signal(signal.SIGTERM, stop)
 
 	while True:
+		if stopNow == True:
+			break
 		updateTimeBuffer()
 		updateLcd()
 		time.sleep(lcdRefreshInt)
