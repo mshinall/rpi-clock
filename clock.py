@@ -10,15 +10,15 @@ import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
 weather = Weather(unit=Unit.FAHRENHEIT)
-weatherLocations = [28350089, 2499644, 2409835, 2428344]
+weatherLocations = sys.argv[1].split(",")
 weatherCityNames = ["" for w in range(0,len(weatherLocations))]
 weatherOutlookCt = 4
-weatherOutlooks = [["" for w in range(0,len(weatherLocations))] for z in range(0,weatherOutlookCt)]
+weatherOutlooks = [["" for w in range(0,weatherOutlookCt)] for z in range(0,len(weatherLocations))]
 weatherOutlookIdx = 0
 weatherLocationIdx = 0
 #degrees = u'\N{DEGREE SIGN}'
 degrees = '*'
-args = sys.argv[1:]
+args = sys.argv[2:]
 argIdx = 0
 baro = ["steady", "rising", "falling"]
 lcdRefreshInt = 1.0
@@ -107,9 +107,9 @@ def updateWeather():
 		weatherOutlooks[i][0] = condition.temp + "F " + condition.text
 		weatherCityNames[i] = lookup.location.city + lookup.location.region
 		#print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
-		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + lookup.wind.chill + lookup.units.temperature + " " + degrees_to_cardinal(int(lookup.wind.direction))
+		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + degrees_to_cardinal(int(lookup.wind.direction)) + " " + lookup.wind.chill + lookup.units.temperature
 		weatherOutlooks[i][2] = "Humidity " + lookup.atmosphere.humidity + "%"
-		weatherOutlooks[i][3] = "Pres " + lookup.atmosphere.pressure + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
+		weatherOutlooks[i][3] = "Press " + str(int(float(lookup.atmosphere.pressure))) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
 weatherRotateTimer = Timer(2.0, rotateWeather)
