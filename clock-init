@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# /etc/init.d/sample.py
+### BEGIN INIT INFO
+# Provides:          clock-init
+# Required-Start:    $remote_fs $syslog $network $time
+# Required-Stop:     $remote_fs $syslog $network $time
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start lcd clock display at boot time
+# Description:       Start lcd clock display at boot time
+### END INIT INFO
+
+
+function start() {
+/home/pi/rpi-clock/clock.py \
+"" \ #comma delimited string of location ids
+"" \ #string to display on top line
+"" \ #string to display on top line ...
+>> /home/pi/clock.log &
+echo $! > /home/pi/clock.pid
+}
+
+function stop() {
+	pid=$(cat /home/pi/clock.pid)
+	kill -s SIGINT $pid
+	sleep 5
+	if [ -e /proc/$pid ]; then
+		kill -9 $pid
+		sleep 5
+	fi
+}
+
+cmd=$1
+shift
+case $cmd in
+	start) start $@ ;;
+	stop) stop $@ ;;
+	restart) stop $@ && start $@ ;;
+esac
