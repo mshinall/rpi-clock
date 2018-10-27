@@ -4,6 +4,7 @@
 import sys
 import time
 import json
+import signal
 from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
@@ -25,7 +26,7 @@ lcdRefreshInt = 1.0
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 
-print(json.dumps(sys.argv))
+#print(json.dumps(sys.argv))
 
 class Timer(_Timer):
    def run(self):
@@ -40,6 +41,10 @@ def printBuffers():
 	for i in range(0, 4):
 		print(str(i) + " " + json.dumps(oldLcdBuffer[i]) + ">" + json.dumps(newLcdBuffer[i]))
 	print("")
+
+def lcdBuffer(y, string):
+	global newLcdBuffer
+	newLcdBuffer[y] = list(string.ljust(20)[0:20])
 
 #printBuffers() 
 
@@ -64,10 +69,6 @@ def updateWeatherBuffer():
 	global weatherCityNames, weatherOutlooks, weatherOutlookIdx, weatherLocationIdx
 	lcdBuffer(2, weatherCityNames[weatherLocationIdx])
 	lcdBuffer(3, weatherOutlooks[weatherLocationIdx][weatherOutlookIdx])
-
-def lcdBuffer(y, string):
-	global newLcdBuffer
-	newLcdBuffer[y] = list(string.ljust(20)[0:20])
 
 def updateArgBuffer():
 	global argIdx, args
@@ -112,16 +113,28 @@ def updateWeather():
 		weatherOutlooks[i][3] = "Press " + str(int(float(lookup.atmosphere.pressure))) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
+def stop():
+	sys.exit(0)	
+
 weatherRotateTimer = Timer(2.0, rotateWeather)
 weatherUpdateTimer = Timer(1800.0, updateWeather)
 argUpdateTimer = Timer(4.0, rotateArg)
 
+
 try:
+	lcdBuffer(1, "starting up...")
+	updateLcd()
+	time.sleep(2)
+
 	weatherUpdateTimer.start()
 	weatherRotateTimer.start()
 	argUpdateTimer.start()
 	updateWeather()
 	updateArgBuffer()
+	
+	signal.signal(signal.SIGINT, stop)
+	signal.signal(signal.SIGTERM, stop)
+
 	while True:
 		updateTimeBuffer()
 		updateLcd()
@@ -129,6 +142,12 @@ try:
 except:
 	clearLcd()
 finally:
+	clearLcd()
+	lcdBuffer(1, "shutting down...")
+	updateLcd()
+	time.sleep(2)
+	clearLcd()
+
 	weatherUpdateTimer.cancel()
 	weatherRotateTimer.cancel()
 	argUpdateTimer.cancel()
