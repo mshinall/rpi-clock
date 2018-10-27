@@ -49,7 +49,9 @@ def lcdBuffer(y, string):
 #printBuffers() 
 
 def clearLcd():
-	global mylcd
+	global mylcd, oldLcdBuffer, newLcdBuffer
+	oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
+	newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 	mylcd.lcd_clear()
 
 def updateLcd():
@@ -142,16 +144,15 @@ try:
 except:
 	clearLcd()
 finally:
+	weatherUpdateTimer.cancel()
+	weatherRotateTimer.cancel()
+	argUpdateTimer.cancel()
 	clearLcd()
+	time.sleep(2)
+	clearLcd()
+
 	lcdBuffer(1, "shutting down...")
 	updateLcd()
 	time.sleep(2)
 	clearLcd()
-
-	weatherUpdateTimer.cancel()
-	weatherRotateTimer.cancel()
-	argUpdateTimer.cancel()
-
-
-
 
