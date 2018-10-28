@@ -5,6 +5,7 @@ import sys
 import time
 import json
 import signal
+import commands
 from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
@@ -120,16 +121,26 @@ def stop():
 	stopNow = True
 	sys.exit(0)	
 
+def starting():
+	myip = commands.getoutput("hostname -I")
+	lcdBuffer(1, "starting up...")
+	lcdBuffer(2, myip.split()[0])
+	updateLcd()
+	time.sleep(2)
+
+def stopping():
+	lcdBuffer(1, "shutting down...")
+	updateLcd()
+	time.sleep(2)
+	clearLcd()
+
 weatherRotateTimer = Timer(2.0, rotateWeather)
 weatherUpdateTimer = Timer(1800.0, updateWeather)
 argUpdateTimer = Timer(4.0, rotateArg)
 
 
 try:
-	lcdBuffer(1, "starting up...")
-	updateLcd()
-	time.sleep(2)
-
+	starting()
 	weatherUpdateTimer.start()
 	weatherRotateTimer.start()
 	argUpdateTimer.start()
@@ -154,9 +165,5 @@ finally:
 	clearLcd()
 	time.sleep(2)
 	clearLcd()
-
-	lcdBuffer(1, "shutting down...")
-	updateLcd()
-	time.sleep(2)
-	clearLcd()
+	stopping()
 
