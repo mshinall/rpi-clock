@@ -122,6 +122,8 @@ def stop():
 	sys.exit(0)	
 
 def starting():
+	global mylcd
+	mylcd.backlight(1)
 	myip = commands.getoutput("hostname -I")
 	lcdBuffer(1, "starting up...")
 	lcdBuffer(2, myip.split()[0])
@@ -129,10 +131,12 @@ def starting():
 	time.sleep(2)
 
 def stopping():
+	global mylcd
 	lcdBuffer(1, "shutting down...")
 	updateLcd()
 	time.sleep(2)
 	clearLcd()
+	mylcd.backlight(0)
 
 weatherRotateTimer = Timer(2.0, rotateWeather)
 weatherUpdateTimer = Timer(1800.0, updateWeather)
@@ -149,7 +153,9 @@ try:
 	
 	signal.signal(signal.SIGINT, stop)
 	signal.signal(signal.SIGTERM, stop)
-
+	signal.signal(signal.SIGABRT, stop);
+	signal.signal(signal.SIGQUIT, stop);
+	
 	while True:
 		if stopNow == True:
 			break
