@@ -13,16 +13,13 @@
 
 
 function start() {
-/home/pi/rpi-clock/clock.py \
-"" \ #comma delimited string of location ids
-"" \ #string to display on top line
-"" \ #string to display on top line ...
->> /home/pi/clock.log &
-echo $! > /home/pi/clock.pid
+/home/pi/rpi-clock/shutdown.py \
+>> /home/pi/shutdown.log &
+echo $! > /home/pi/shutdown.pid
 }
 
 function stop() {
-	pid=$(cat /home/pi/clock.pid)
+	pid=$(cat /home/pi/shutdown.pid)
 	kill $pid
 	sleep 10
 	if [ -e /proc/$pid ]; then

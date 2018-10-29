@@ -6,6 +6,7 @@ import time
 import json
 import signal
 import commands
+import RPi.GPIO as GPIO
 from threading import _Timer
 from weather import Weather, Unit
 import I2C_LCD_driver
@@ -28,6 +29,17 @@ oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 stopNow = False
 #print(json.dumps(sys.argv))
+showIp = False
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+def buttonCallback(channel):
+	global showIp
+	print(time.strftime("%c", time.localtime()) + " button pushed")
+	showIp = True
+
+GPIO.add_event_detect(20, GPIO.FALLING, callback=buttonCallback)
 
 class Timer(_Timer):
    def run(self):
@@ -116,12 +128,24 @@ def updateWeather():
 		weatherOutlooks[i][3] = "Press " + str(int(float(lookup.atmosphere.pressure))) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
+def showIpAddress():
+	global mylcd, showIp
+	clearLcd()
+	mylcd.backlight(1)
+	myip = commands.getoutput("hostname -I")
+	lcdBuffer(1, "ip address")
+	lcdBuffer(2, myip.split()[0])
+	updateLcd()
+	time.sleep(2)
+	showIp = False
+
 def stop():
 	global stopNow
 	stopNow = True
 	sys.exit(0)	
 
 def starting():
+	print(time.strftime("%c", time.localtime()) + " starting")
 	global mylcd
 	mylcd.backlight(1)
 	myip = commands.getoutput("hostname -I")
@@ -131,6 +155,7 @@ def starting():
 	time.sleep(2)
 
 def stopping():
+	print(time.strftime("%c", time.localtime()) + " stopping")
 	global mylcd
 	lcdBuffer(1, "shutting down...")
 	updateLcd()
@@ -157,14 +182,18 @@ try:
 	signal.signal(signal.SIGQUIT, stop);
 	
 	while True:
+		if showIp == True:
+			showIpAddress()
 		if stopNow == True:
 			break
 		updateTimeBuffer()
 		updateLcd()
 		time.sleep(lcdRefreshInt)
 except:
+	print(time.strftime("%c", time.localtime()) + " exception in main loop")
 	clearLcd()
 finally:
+	GPIO.cleanup()
 	weatherUpdateTimer.cancel()
 	weatherRotateTimer.cancel()
 	argUpdateTimer.cancel()
