@@ -123,7 +123,7 @@ def updateWeather():
 		#print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + degrees_to_cardinal(int(lookup.wind.direction)) + " " + lookup.wind.chill + lookup.units.temperature
 		weatherOutlooks[i][2] = "Humidity " + lookup.atmosphere.humidity + "%"
-		weatherOutlooks[i][3] = "Baro " + str(int(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
+		weatherOutlooks[i][3] = "Baro " + "{:02}".format(str(float(22.92 * float(lookup.atmosphere.pressure) / 1013.25))) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
 def showIpAddress():
