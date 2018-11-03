@@ -29,6 +29,9 @@ oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 stopNow = False
 showIp = False
+showTimeSep = True
+showUpdWthr = False
+
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -77,13 +80,22 @@ def updateLcd():
 				oldLcdBuffer[y][x] = newLcdBuffer[y][x]
 
 def updateTimeBuffer():
+	global showTimeSep
 	now = time.localtime()
-	#lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))
-	lcdBuffer(1, time.strftime("%Y-%m-%d  %I:%M %p", now))
+	#lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))i
+	if showTimeSep == True:
+		showTimeSep = False
+		lcdBuffer(1, time.strftime("%Y-%m-%d  %I:%M %p", now))
+	else:
+		showTimeSep = True
+		lcdBuffer(1, time.strftime("%Y-%m-%d  %I %M %p", now))
 
 def updateWeatherBuffer():
-	global weatherCityNames, weatherOutlooks, weatherOutlookIdx, weatherLocationIdx
-	lcdBuffer(2, weatherCityNames[weatherLocationIdx])
+	global weatherCityNames, weatherOutlooks, weatherOutlookIdx, weatherLocationIdx, showUpdWthr
+	if showUpdWthr == True:
+		lcdBuffer(2, "* " + weatherCityNames[weatherLocationIdx])
+	else:
+		lcdBuffer(2, weatherCityNames[weatherLocationIdx])
 	lcdBuffer(3, weatherOutlooks[weatherLocationIdx][weatherOutlookIdx])
 
 def updateArgBuffer():
@@ -114,7 +126,8 @@ def degrees_to_cardinal(d):
 	return dirs[ix % 16]
 
 def updateWeather():
-	global weatherOutlooks, weatherLocations, weatherUpdateTimer, weatherCityNames, baro
+	global weatherOutlooks, weatherLocations, weatherUpdateTimer, weatherCityNames, baro, showUpdWthr
+	showUpdWthr = True
 	for i in range(0, len(weatherLocations)):
 		lookup = weather.lookup(weatherLocations[i])
 		condition = lookup.condition
@@ -124,8 +137,9 @@ def updateWeather():
 		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + degrees_to_cardinal(int(lookup.wind.direction)) + " " + lookup.wind.chill + lookup.units.temperature
 		weatherOutlooks[i][2] = "Humidity " + lookup.atmosphere.humidity + "%"
 		#weatherOutlooks[i][3] = "Baro " + "{:.2f}".format(float(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
-		weatherOutlooks[i][3] = "Baro " + "{:.2f}".format(float(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + "\" " + baro[int(lookup.atmosphere.rising)]
+		weatherOutlooks[i][3] = "BarPr " + "{:.2f}".format(float(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + "\" " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
+	showUpdWthr = False
 
 def showIpAddress():
 	global mylcd, showIp
@@ -163,8 +177,8 @@ def stopping():
 	clearLcd()
 	mylcd.backlight(0)
 
-weatherRotateTimer = Timer(2.0, rotateWeather)
-weatherUpdateTimer = Timer(1800.0, updateWeather)
+weatherRotateTimer = Timer(4.0, rotateWeather)
+weatherUpdateTimer = Timer(60.0*10.0, updateWeather)
 argUpdateTimer = Timer(4.0, rotateArg)
 
 
