@@ -28,7 +28,6 @@ lcdRefreshInt = 1.0
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 stopNow = False
-#print(json.dumps(sys.argv))
 showIp = False
 
 GPIO.setmode(GPIO.BCM)
@@ -65,6 +64,7 @@ def clearLcd():
 	global mylcd, oldLcdBuffer, newLcdBuffer
 	oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 	newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
+	updateLcd()
 	mylcd.lcd_clear()
 
 def updateLcd():
@@ -78,7 +78,8 @@ def updateLcd():
 
 def updateTimeBuffer():
 	now = time.localtime()
-	lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))
+	#lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))
+	lcdBuffer(1, time.strftime("%Y-%m-%d  %I:%M %p", now))
 
 def updateWeatherBuffer():
 	global weatherCityNames, weatherOutlooks, weatherOutlookIdx, weatherLocationIdx
@@ -108,9 +109,6 @@ def rotateWeather():
 	updateWeatherBuffer()
 
 def degrees_to_cardinal(d):
-	'''
-	note: this is highly approximate...
-	'''
 	dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
 	ix = int((d + 11.25)/22.5)
 	return dirs[ix % 16]
@@ -125,7 +123,7 @@ def updateWeather():
 		#print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + degrees_to_cardinal(int(lookup.wind.direction)) + " " + lookup.wind.chill + lookup.units.temperature
 		weatherOutlooks[i][2] = "Humidity " + lookup.atmosphere.humidity + "%"
-		weatherOutlooks[i][3] = "Press " + str(int(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
+		weatherOutlooks[i][3] = "Baro " + str(int(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
 def showIpAddress():
@@ -147,16 +145,17 @@ def stop():
 def starting():
 	print(time.strftime("%c", time.localtime()) + " starting")
 	global mylcd
+	clearLcd()
 	mylcd.backlight(1)
 	myip = commands.getoutput("hostname -I")
 	lcdBuffer(1, "starting up...")
-	lcdBuffer(2, myip.split()[0])
 	updateLcd()
 	time.sleep(2)
 
 def stopping():
 	print(time.strftime("%c", time.localtime()) + " stopping")
 	global mylcd
+	clearLcd()
 	lcdBuffer(1, "shutting down...")
 	updateLcd()
 	time.sleep(2)
