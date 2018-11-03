@@ -59,7 +59,7 @@ def lcdBuffer(y, string):
 	global newLcdBuffer
 	newLcdBuffer[y] = list(string.ljust(20)[0:20])
 
-#printBuffers() 
+#printBuffers()
 
 def clearLcd():
 	global mylcd, oldLcdBuffer, newLcdBuffer
@@ -88,7 +88,7 @@ def updateWeatherBuffer():
 def updateArgBuffer():
 	global argIdx, args
 	if len(args) > 0:
-		lcdBuffer(0, args[argIdx])	
+		lcdBuffer(0, args[argIdx])
 
 def rotateArg():
 	global argIdx, args
@@ -125,7 +125,7 @@ def updateWeather():
 		#print str(weatherLocations[i]) + ": " + weatherCityNames[i] + ": " + weatherOutlooks[i]
 		weatherOutlooks[i][1] = "Wind " + lookup.wind.speed + lookup.units.speed + " " + degrees_to_cardinal(int(lookup.wind.direction)) + " " + lookup.wind.chill + lookup.units.temperature
 		weatherOutlooks[i][2] = "Humidity " + lookup.atmosphere.humidity + "%"
-		weatherOutlooks[i][3] = "Press " + str(int(float(lookup.atmosphere.pressure))) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
+		weatherOutlooks[i][3] = "Press " + str(int(22.92 * float(lookup.atmosphere.pressure) / 1013.25)) + lookup.units.pressure + " " + baro[int(lookup.atmosphere.rising)]
 	updateWeatherBuffer()
 
 def showIpAddress():
@@ -142,7 +142,7 @@ def showIpAddress():
 def stop():
 	global stopNow
 	stopNow = True
-	sys.exit(0)	
+	sys.exit(0)
 
 def starting():
 	print(time.strftime("%c", time.localtime()) + " starting")
@@ -175,12 +175,12 @@ try:
 	argUpdateTimer.start()
 	updateWeather()
 	updateArgBuffer()
-	
+
 	signal.signal(signal.SIGINT, stop)
 	signal.signal(signal.SIGTERM, stop)
 	signal.signal(signal.SIGABRT, stop);
 	signal.signal(signal.SIGQUIT, stop);
-	
+
 	while True:
 		if showIp == True:
 			showIpAddress()
@@ -201,4 +201,3 @@ finally:
 	time.sleep(2)
 	clearLcd()
 	stopping()
-
