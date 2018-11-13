@@ -95,7 +95,7 @@ def updateWeatherBuffer():
 	if showUpdWthr == True:
 		lcdBuffer(2, "* " + weatherCityNames[weatherLocationIdx])
 	else:
-		lcdBuffer(2, weatherCityNames[weatherLocationIdx])
+		lcdBuffer(2, weatherCityNames[weatherLocationIdx] + "  ")
 	lcdBuffer(3, weatherOutlooks[weatherLocationIdx][weatherOutlookIdx])
 
 def updateArgBuffer():
