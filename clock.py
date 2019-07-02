@@ -11,7 +11,7 @@ from threading import _Timer
 import I2C_LCD_driver
 
 mylcd = I2C_LCD_driver.lcd()
-args = sys.argv[2:]
+args = sys.argv[1:]
 argIdx = 0
 lcdRefreshInt = 1.0
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
@@ -67,21 +67,32 @@ def updateLcd():
 				mylcd.lcd_display_string(newLcdBuffer[y][x], y+1, x)
 				oldLcdBuffer[y][x] = newLcdBuffer[y][x]
 
+def rightJustify(str):
+	while(len(str) < 20):
+        	str = " " + str
+	return str
+
+def centerJustify(str):
+	while(len(str) < 20):
+		str = " " + str + " "
+	return str
+
 def updateTimeBuffer():
 	global showTimeSep
 	now = time.localtime()
-	#lcdBuffer(1, time.strftime("%m-%d-%Y  %I:%M %p", now))
+	lcdBuffer(0, time.strftime("%A", now))
+	lcdBuffer(1, rightJustify(time.strftime("%B %d %Y", now)))
 	if showTimeSep == True:
 		showTimeSep = False
-		lcdBuffer(1, time.strftime("%Y-%m-%d  %I:%M %p", now))
+		lcdBuffer(2, centerJustify(time.strftime("%I:%M:%S %p", now)))
 	else:
 		showTimeSep = True
-		lcdBuffer(1, time.strftime("%Y-%m-%d  %I %M %p", now))
+		lcdBuffer(2, centerJustify(time.strftime("%I %M %S %p", now)))
 
 def updateArgBuffer():
 	global argIdx, args
 	if len(args) > 0:
-		lcdBuffer(0, args[argIdx])
+		lcdBuffer(3, args[argIdx])
 
 def rotateArg():
 	global argIdx, args
@@ -126,7 +137,7 @@ def stopping():
 	clearLcd()
 	mylcd.backlight(0)
 
-argUpdateTimer = Timer(4.0, rotateArg)
+argUpdateTimer = Timer(lcdRefreshInt, rotateArg)
 
 try:
 	starting()
