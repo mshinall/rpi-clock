@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+from datetime import date
+import holidays
 import sys
 import time
 import json
@@ -14,12 +16,13 @@ mylcd = I2C_LCD_driver.lcd()
 args = sys.argv[1:]
 argIdx = 0
 lcdRefreshInt = 1.0
+argRefreshInt = 4.0
+msgRefreshInt = 600.0
 oldLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 newLcdBuffer = [[" " for x in range(0, 20)] for y in range(0,4)]
 stopNow = False
 showIp = False
-showTimeSep = True
-showUpdWthr = False
+us_holidays = holidays.US()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(20, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -78,21 +81,33 @@ def centerJustify(str):
 	return str
 
 def updateTimeBuffer():
-	global showTimeSep
 	now = time.localtime()
-	lcdBuffer(0, time.strftime("%A", now))
-	lcdBuffer(1, rightJustify(time.strftime("%B %d %Y", now)))
-	if showTimeSep == True:
-		showTimeSep = False
-		lcdBuffer(2, centerJustify(time.strftime("%I:%M:%S %p", now)))
-	else:
-		showTimeSep = True
-		lcdBuffer(2, centerJustify(time.strftime("%I %M %S %p", now)))
+	lcdBuffer(0, centerJustify(time.strftime("%a %b %d %Y", now)))
+	lcdBuffer(1, centerJustify(time.strftime("%I:%M:%S %p", now)))
 
 def updateArgBuffer():
 	global argIdx, args
 	if len(args) > 0:
-		lcdBuffer(3, args[argIdx])
+		lcdBuffer(2, args[argIdx])
+
+def updateMessageBuffer():
+	now = time.localtime()
+	year = now.tm_year
+	mth = now.tm_mon
+	day = now.tm_mday
+	hour = now.tm_hour
+	if date(year, mth, day) in us_holidays:
+		hol = us_holidays.get(date(year, mth, day))
+		lcdBuffer(3, centerJustify(hol + "!"))
+	else:
+		if hour < 5 or hour > 20:
+			lcdBuffer(3, centerJustify("Good Night!"))
+		elif hour < 12:
+			lcdBuffer(3, centerJustify("Good Morning!"))
+		elif hour < 17:
+			lcdBuffer(3, centerJustify("Good Afternoon"))
+		else:
+			lcdBuffer(3, centerJustify("Good Evening!"))
 
 def rotateArg():
 	global argIdx, args
@@ -137,12 +152,16 @@ def stopping():
 	clearLcd()
 	mylcd.backlight(0)
 
-argUpdateTimer = Timer(lcdRefreshInt, rotateArg)
+argUpdateTimer = Timer(argRefreshInt, rotateArg)
+msgUpdateTimer = Timer(msgRefreshInt, updateMessageBuffer)
 
 try:
 	starting()
 	argUpdateTimer.start()
 	updateArgBuffer()
+
+	msgUpdateTimer.start()
+	updateMessageBuffer()
 
 	signal.signal(signal.SIGINT, stop)
 	signal.signal(signal.SIGTERM, stop)
@@ -163,6 +182,7 @@ except:
 finally:
 	GPIO.cleanup()
 	argUpdateTimer.cancel()
+	msgUpdateTimer.cancel()
 	clearLcd()
 	time.sleep(2)
 	clearLcd()
