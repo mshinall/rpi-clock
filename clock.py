@@ -105,7 +105,7 @@ def updateMessageBuffer():
 		elif hour < 12:
 			lcdBuffer(3, centerJustify("Good Morning!"))
 		elif hour < 17:
-			lcdBuffer(3, centerJustify("Good Afternoon"))
+			lcdBuffer(3, centerJustify("Good Afternoon!"))
 		else:
 			lcdBuffer(3, centerJustify("Good Evening!"))
 
